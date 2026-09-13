@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Localize } from '@deriv-com/translations';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
@@ -61,7 +62,7 @@ function AccountLabel({ type }: { type: 'demo' | 'real' }) {
 
 function resolveHeaderAppName(appName?: string): string {
   const fromEnv = process.env.NEXT_PUBLIC_DERIV_APP_NAME?.trim();
-  return appName?.trim() || fromEnv || 'Deriv Trading';
+  return appName?.trim() || fromEnv || 'D Trader';
 }
 
 function resolveShowAppName(showAppName?: boolean): boolean {
@@ -94,7 +95,7 @@ export function Header({
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 border-b bg-background/80 backdrop-blur-sm">
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 shrink-0">
         {!logoSrc || logoError ? (
           <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
             {logoLetter}
@@ -109,13 +110,33 @@ export function Header({
           />
         )}
         {shouldShowName && (
-          <h1 className="text-lg font-semibold text-foreground hidden sm:block">
-            {resolvedName}
-          </h1>
+          <div className="hidden sm:flex flex-col leading-none">
+            <h1 className="text-lg font-semibold text-foreground">{resolvedName}</h1>
+            <span className="mt-1 h-0.5 w-8 origin-left animate-pulse rounded-full bg-primary" aria-hidden="true" />
+          </div>
         )}
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex min-w-0 items-center gap-2 sm:gap-3">
         {actions}
+        {isAuthenticated && (
+          <nav className="flex min-w-0 items-center gap-1 overflow-x-auto whitespace-nowrap [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="Primary navigation">
+            <Link href="/analysis" className="rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+              <Localize i18n_default_text="Analysis" />
+            </Link>
+            <Link href="/reports" className="rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+              <Localize i18n_default_text="Reports" />
+            </Link>
+            <Link href="/bot-builder" className="rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+              <Localize i18n_default_text="Bot builder" />
+            </Link>
+            <Link href="/load-bot" className="rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+              <Localize i18n_default_text="Load bot" />
+            </Link>
+            <Link href="/bulk-trader" className="rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+              <Localize i18n_default_text="Bulk trader" />
+            </Link>
+          </nav>
+        )}
         <LanguageSwitcher />
         {isAuthenticated && activeAccount && (
           <Popover open={accountSwitcherOpen} onOpenChange={setAccountSwitcherOpen}>
