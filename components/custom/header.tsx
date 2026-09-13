@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Localize } from '@deriv-com/translations';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
@@ -116,6 +117,16 @@ export function Header({
       </div>
       <div className="flex items-center gap-3">
         {actions}
+        {isAuthenticated && (
+          <nav className="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
+            <Link href="/analysis" className="rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+              <Localize i18n_default_text="Analysis" />
+            </Link>
+            <Link href="/reports" className="rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+              <Localize i18n_default_text="Reports" />
+            </Link>
+          </nav>
+        )}
         <LanguageSwitcher />
         {isAuthenticated && activeAccount && (
           <Popover open={accountSwitcherOpen} onOpenChange={setAccountSwitcherOpen}>
