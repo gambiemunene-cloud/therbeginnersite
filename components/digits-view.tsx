@@ -28,6 +28,7 @@ import type {
 } from '@deriv/core';
 import type { ContractMode, TradeType, DigitStats } from '../lib/types';
 import type { DigitsAppConfig } from '../lib/app-config';
+import type { ReactNode } from 'react';
 
 function getDigitTradeTypeOptions(
   localize: (text: string) => string
@@ -103,6 +104,7 @@ export interface DigitsViewProps {
   rearrangeMode?: boolean;
   /** Called with the new block order after a drag-drop reorder. */
   onReorder?: (order: DigitsAppConfig['order']) => void;
+  automatedBot?: ReactNode;
 }
 
 export function DigitsView({
@@ -150,6 +152,7 @@ export function DigitsView({
   selectedKey,
   rearrangeMode,
   onReorder,
+  automatedBot,
 }: DigitsViewProps) {
   const isMobile = useIsMobile();
   // Pinning is a mobile affordance: on desktop the controls card grows to fit,
@@ -291,6 +294,8 @@ export function DigitsView({
       )}
       {/* Spacer to push content below fixed header — taller when authenticated (account bar visible) */}
       <div className={authState === 'authenticated' ? 'h-[76px] shrink-0' : 'h-[66px] shrink-0'} />
+
+      {!editMode && automatedBot ? <div className="mx-auto w-full max-w-7xl px-3 pt-3 sm:px-4">{automatedBot}</div> : null}
 
       {appConfig ? (
         isMobile ? (

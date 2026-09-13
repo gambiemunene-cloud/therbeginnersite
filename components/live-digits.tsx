@@ -12,6 +12,7 @@ import { useDerivWSContext } from '@/components/custom/deriv-ws-provider';
 import { useLogoSrc } from '@/components/custom/logo-src-provider';
 import { DigitsView } from './digits-view';
 import type { DigitsAppConfig } from '../lib/app-config';
+import { AutomatedBotPanel } from './automated-bot-panel';
 
 export function LiveDigits({
   appConfig,
@@ -94,6 +95,21 @@ export function LiveDigits({
       selectedKey={selectedKey}
       rearrangeMode={rearrangeMode}
       onReorder={onReorder}
+      automatedBot={
+        <AutomatedBotPanel
+          isConnected={trading.isConnected}
+          isAuthenticated={!!auth.wsUrl}
+          lastDigit={trading.lastDigit}
+          digitStats={trading.digitStats}
+          selectedDigit={trading.selectedDigit}
+          setSelectedDigit={trading.setSelectedDigit}
+          setContractMode={trading.setContractMode}
+          setStake={trading.setStake}
+          buyContract={trading.buyContract}
+          isBuying={trading.isBuying}
+          activeSymbolName={trading.activeSymbol?.underlying_symbol}
+        />
+      }
     />
   );
 }
