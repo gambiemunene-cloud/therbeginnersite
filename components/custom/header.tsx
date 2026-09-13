@@ -125,6 +125,15 @@ export function Header({
             <Link href="/reports" className="rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
               <Localize i18n_default_text="Reports" />
             </Link>
+            <Link href="/bot-builder" className="rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+              <Localize i18n_default_text="Bot builder" />
+            </Link>
+            <Link href="/load-bot" className="rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+              <Localize i18n_default_text="Load bot" />
+            </Link>
+            <Link href="/bulk-trader" className="rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+              <Localize i18n_default_text="Bulk trader" />
+            </Link>
           </nav>
         )}
         <LanguageSwitcher />
