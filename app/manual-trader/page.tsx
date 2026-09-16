@@ -30,7 +30,7 @@ export default function ManualTraderPage() {
   const [selectedDigit, setSelectedDigit] = useState(trading.selectedDigit);
 
   useEffect(() => {
-    if (authState === 'unauthenticated' || authState === 'error') router.replace('/');
+    if (authState === 'error') router.replace('/');
   }, [authState, router]);
 
   useEffect(() => {
@@ -43,7 +43,23 @@ export default function ManualTraderPage() {
   const cursorPosition = `${(cursorDigit % 5) * 20 + 10}%`;
   const cursorRow = cursorDigit > 4 ? 'translateY(128px)' : 'translateY(0)';
 
-  if (authState !== 'authenticated') return <main className="flex min-h-dvh items-center justify-center bg-background"><div className="size-8 animate-spin rounded-full border-2 border-primary border-t-transparent" /></main>;
+  if (authState !== 'authenticated') {
+    return (
+      <main className="flex min-h-dvh items-center justify-center bg-background px-4">
+        <Card className="w-full max-w-md border-primary/15 text-center">
+          <CardHeader>
+            <CardTitle>Manual trader</CardTitle>
+            <CardDescription>Sign in to open the live manual trading board.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button className="w-full rounded-full" onClick={() => void login()}>
+              Sign in to continue
+            </Button>
+          </CardContent>
+        </Card>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-dvh bg-background pb-12">
