@@ -135,6 +135,9 @@ export function Header({
             <Link href="/bulk-trader" className="rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
               <Localize i18n_default_text="Bulk trader" />
             </Link>
+            <Link href="/manual-trader" className="rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+              <Localize i18n_default_text="Manual trader" />
+            </Link>
           </nav>
         )}
         <LanguageSwitcher />
