@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import type { ContractMode, DigitStats } from '@/lib/types';
+import type { ProposalInfo } from '@deriv/core';
 
 type BotStatus = 'stopped' | 'scanning' | 'armed' | 'blocked';
 
@@ -20,6 +21,7 @@ interface AutomatedBotPanelProps {
   setContractMode: (mode: ContractMode) => void;
   setStake: (value: string) => void;
   buyContract: () => Promise<void>;
+  proposal: ProposalInfo | null;
   isBuying: boolean;
   activeSymbolName?: string;
 }
@@ -38,6 +40,7 @@ export function AutomatedBotPanel({
   setContractMode,
   setStake,
   buyContract,
+  proposal,
   isBuying,
   activeSymbolName,
 }: AutomatedBotPanelProps) {
@@ -49,6 +52,7 @@ export function AutomatedBotPanel({
   const [liveArmed, setLiveArmed] = useState(false);
   const [killSwitch, setKillSwitch] = useState(false);
   const [lastTradeDigit, setLastTradeDigit] = useState<number | null>(null);
+  const [pendingEntry, setPendingEntry] = useState(false);
   const ticksSinceTrade = useRef(DEFAULT_COOLDOWN);
 
   const sampleReady = digitStats.totalTicks >= MIN_SAMPLE;
@@ -69,17 +73,24 @@ export function AutomatedBotPanel({
     }
     setStatus(canTrade ? 'armed' : 'blocked');
 
-    if (!canTrade || lastDigit === null || leastDigit === null || ticksSinceTrade.current < Number(cooldown || DEFAULT_COOLDOWN) || isBuying) return;
+    if (!canTrade || lastDigit === null || leastDigit === null || ticksSinceTrade.current < Number(cooldown || DEFAULT_COOLDOWN) || isBuying || pendingEntry) return;
     if (lastDigit !== leastDigit || lastTradeDigit === lastDigit) return;
 
-    // The strategy enters Differs when the least frequent digit appears.
+    // Update the trade controls first. The proposal is recreated asynchronously,
+    // so buying in this same render would submit the previous contract.
     setContractMode('DIGITDIFF');
     setSelectedDigit(leastDigit);
     setStake(stake);
+    setPendingEntry(true);
+  }, [canTrade, cooldown, isBuying, lastDigit, lastTradeDigit, leastDigit, liveArmed, pendingEntry, sampleReady, setContractMode, setSelectedDigit, setStake, stake, status, killSwitch]);
+
+  useEffect(() => {
+    if (!pendingEntry || isBuying || !canTrade || lastDigit === null || !proposal || !/differs/i.test(proposal.longcode)) return;
+    setPendingEntry(false);
     setLastTradeDigit(lastDigit);
     ticksSinceTrade.current = 0;
     void buyContract();
-  }, [buyContract, canTrade, cooldown, isBuying, lastDigit, lastTradeDigit, leastDigit, liveArmed, sampleReady, setContractMode, setSelectedDigit, setStake, stake, status, killSwitch]);
+  }, [buyContract, canTrade, isBuying, lastDigit, pendingEntry]);
 
   const startBot = () => {
     if (!isConnected || !isAuthenticated) return;
