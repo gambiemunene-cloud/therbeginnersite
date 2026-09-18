@@ -106,6 +106,7 @@ export function LiveDigits({
           setContractMode={trading.setContractMode}
           setStake={trading.setStake}
           buyContract={trading.buyContract}
+          proposal={trading.proposal}
           isBuying={trading.isBuying}
           activeSymbolName={trading.activeSymbol?.underlying_symbol}
         />
